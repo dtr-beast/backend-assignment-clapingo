@@ -1,13 +1,12 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es2021: true,
   },
-  extends: ['prettier', 'standard-with-typescript'],
+  extends: ["prettier", "standard-with-typescript"],
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module'
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
-  rules: {
-  }
+  rules: {},
 }
