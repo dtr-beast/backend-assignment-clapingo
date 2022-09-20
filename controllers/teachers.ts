@@ -8,8 +8,20 @@ import logger from "../utils/logger"
 
 const teachersRouter = Router()
 
+export interface Result {
+  _id: number
+  favouriteTeacherIds: string[]
+  users: UsersEntity[]
+}
+export interface UsersEntity {
+  _id: string
+  email: string
+  name: string
+  teacherId: string
+}
+
 teachersRouter.get("/favourite", async (request, response) => {
-  const result = await Learner.aggregate<TeacherType & { user: UserType[] }>([
+  const result = await Learner.aggregate<Result>([
     {
       $unwind: {
         path: "$favouriteTeachers",
@@ -31,22 +43,34 @@ teachersRouter.get("/favourite", async (request, response) => {
       },
     },
     {
+      $group: {
+        _id: "$count",
+        favouriteTeacherIds: {
+          $push: "$_id",
+        },
+      },
+    },
+    {
       $limit: 1,
     },
     {
       $lookup: {
         from: "users",
-        localField: "_id",
+        localField: "favouriteTeacherIds",
         foreignField: "teacherId",
-        as: "user",
+        as: "users",
       },
     },
   ])
-  if (!result) {
+  if (!result || result.length === 0) {
     response.status(httpStatus.OK).json({ message: "No favourite teachers" })
   }
 
-  return response.status(httpStatus.OK).send({ name: result[0].user[0].name })
+  return response
+    .status(httpStatus.OK)
+    .json(
+      result[0].users.map((u) => ({ name: u.name, email: u.email, id: u._id }))
+    )
 })
 
 teachersRouter.post("/add/:id", async (request, response) => {

@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsnd --respawn --files index.ts",
-    "lint": "eslint --ext .ts",
-    "lint:fix": "eslint --fix",
-    "prettier": "prettier --write ."
+    "fake": "tsnd --respawn fake_data/fake_data_generator.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +17,7 @@
     "@types/cors": "^2.8.12",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/node": "^18.7.18",
+    "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
